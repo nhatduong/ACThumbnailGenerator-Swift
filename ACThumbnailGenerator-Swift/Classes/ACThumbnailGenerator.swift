@@ -1,15 +1,17 @@
 
 import AVKit
 import AVFoundation
+import UIKit
 
 public protocol ACThumbnailGeneratorDelegate: class {
-    func generator(_ generator: ACThumbnailGenerator, didCapture image: UIImage, at position: Double)
+    func generator(_ generator: ACThumbnailGenerator, didCapture image: UIImage, at position: Double, imageView: UIView)
 }
 
 public class ACThumbnailGenerator: NSObject {
     private(set) var preferredBitrate: Double
     private(set) var streamUrl: URL
     private(set) var queue: [Double] = []
+    private var imageView: UIView?
     
     private var player: AVPlayer?
     private var videoOutput: AVPlayerItemVideoOutput?
@@ -17,9 +19,10 @@ public class ACThumbnailGenerator: NSObject {
     var loading = false
     public weak var delegate: ACThumbnailGeneratorDelegate?
     
-    public init(streamUrl: URL, preferredBitrate: Double = 0.0) {
+    public init(streamUrl: URL, preferredBitrate: Double = 0.0, imageView: UIView) {
         self.streamUrl = streamUrl
         self.preferredBitrate = preferredBitrate
+        self.imageView = imageView
     }
     
     deinit {
@@ -111,9 +114,9 @@ public class ACThumbnailGenerator: NSObject {
         if let buffer = videoOutput.copyPixelBuffer(forItemTime: currentTime, itemTimeForDisplay: nil) {
             let ciImage = CIImage(cvPixelBuffer: buffer)
             let imgRect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(buffer), height: CVPixelBufferGetHeight(buffer))
-            if let videoImage = CIContext().createCGImage(ciImage, from: imgRect) {
+            if let videoImage = CIContext().createCGImage(ciImage, from: imgRect), let v = self.imageView {
                 let image = UIImage.init(cgImage: videoImage)
-                delegate?.generator(self, didCapture: image, at: CMTimeGetSeconds(currentTime))
+                delegate?.generator(self, didCapture: image, at: CMTimeGetSeconds(currentTime), imageView: v)
                 
                 loading = false
                 
