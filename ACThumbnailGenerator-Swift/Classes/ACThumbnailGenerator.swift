@@ -114,9 +114,9 @@ public class ACThumbnailGenerator: NSObject {
         if let buffer = videoOutput.copyPixelBuffer(forItemTime: currentTime, itemTimeForDisplay: nil) {
             let ciImage = CIImage(cvPixelBuffer: buffer)
             let imgRect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(buffer), height: CVPixelBufferGetHeight(buffer))
-            if let videoImage = CIContext().createCGImage(ciImage, from: imgRect), let v = self.imageView, let u = self.streamUrl.absoluteString {
+            if let videoImage = CIContext().createCGImage(ciImage, from: imgRect), let v = self.imageView {
                 let image = UIImage.init(cgImage: videoImage)
-                delegate?.generator(self, didCapture: image, at: CMTimeGetSeconds(currentTime), imageView: v, url: u)
+                delegate?.generator(self, didCapture: image, at: CMTimeGetSeconds(currentTime), imageView: v, url: self.streamUrl.absoluteString)
                 
                 loading = false
                 
