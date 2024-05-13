@@ -9,7 +9,7 @@ public protocol ACThumbnailGeneratorDelegate: class {
 
 public class ACThumbnailGenerator: NSObject {
     private(set) var preferredBitrate: Double
-    private(set) var streamUrl: URL
+    private var streamUrl: URL
     private(set) var queue: [Double] = []
     private var imageView: UIImageView?
     
