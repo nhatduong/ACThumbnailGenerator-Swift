@@ -4,14 +4,14 @@ import AVFoundation
 import UIKit
 
 public protocol ACThumbnailGeneratorDelegate: class {
-    func generator(_ generator: ACThumbnailGenerator, didCapture image: UIImage, at position: Double, imageView: UIView)
+    func generator(_ generator: ACThumbnailGenerator, didCapture image: UIImage, at position: Double, imageView: UIImageView)
 }
 
 public class ACThumbnailGenerator: NSObject {
     private(set) var preferredBitrate: Double
     private(set) var streamUrl: URL
     private(set) var queue: [Double] = []
-    private var imageView: UIView?
+    private var imageView: UIImageView?
     
     private var player: AVPlayer?
     private var videoOutput: AVPlayerItemVideoOutput?
@@ -19,7 +19,7 @@ public class ACThumbnailGenerator: NSObject {
     var loading = false
     public weak var delegate: ACThumbnailGeneratorDelegate?
     
-    public init(streamUrl: URL, preferredBitrate: Double = 0.0, imageView: UIView) {
+    public init(streamUrl: URL, preferredBitrate: Double = 0.0, imageView: UIImageView) {
         self.streamUrl = streamUrl
         self.preferredBitrate = preferredBitrate
         self.imageView = imageView
